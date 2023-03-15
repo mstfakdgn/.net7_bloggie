@@ -1,0 +1,107 @@
+﻿@model Bloggie.Web.Models.ViewModels.AddBlogPostRequest
+@{
+}
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>
+            Add New BlogPost - Admin Functionality
+        </h1>
+    </div>
+</div>
+
+<div class="container py-5">
+    <form method="post">
+        <div class="mb-3">
+            <label class="form-label">Heading</label>
+            <input type="text" class="form-control" id="heading" name="heading" asp-for="Heading" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">PageTitle</label>
+            <input type="text" class="form-control" id="pageTitle" name="pageTitle" asp-for="PageTitle" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Content</label>
+            <textarea class="form-control" id="content" name="content" asp-for="Content"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">ShortDescription</label>
+            <input type="text" class="form-control" id="shortDescription" name="shortDescription" asp-for="ShortDescription" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">FeaturedImageUpload</label>
+            <input type="file" class="form-control" id="featuredImageUpload" />
+
+            <img src="" id="featuredImageDisplay" style="display:none;width:300px;"/>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">FeaturedImageUrl</label>
+            <input type="text" class="form-control" id="featuredImageUrl" name="featuredImageUrl" asp-for="FeaturedImageUrl" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">UrlHandle</label>
+            <input type="text" class="form-control" id="urlHandle" name="urlHandle" asp-for="UrlHandle" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">PublishedDate</label>
+            <input type="date" class="form-control" id="publishedDate" name="publishedDate" asp-for="PublishedDate" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Author</label>
+            <input type="text" class="form-control" id="author" name="author" asp-for="Author" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Visible</label>
+            <div class="input-group">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" value="true" id="visible" name="visible" asp-for="Visible">
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Tags</label>
+            <select class="form-select" asp-items="@Model.Tags" asp-for="SelectedTags">
+
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-dark">Submit</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        var editor = new FroalaEditor('#content', {
+            imageUploadURL: '/api/image'
+        });
+
+        const feturedUploadElement = document.getElementById('featuredImageUpload');
+        const feturedImageUrlElement = document.getElementById('featuredImageUrl');
+        const featuredImageDisplay = document.getElementById('featuredImageDisplay');
+
+        async function uploadFeaturedImage(e) {
+            console.log(e.target.files[0]);
+
+            let data = new FormData();
+            data.append('file', e.target.files[0]);
+
+            await fetch('/api/image', {
+                method:'POST',
+                headers: {
+                    'Accept': '*/*'
+                },
+                body:data
+            }).then(response => response.json()).then(result => {
+                feturedImageUrlElement.value = result.link;
+                featuredImageDisplay.src = result.link;
+                featuredImageDisplay.style.display = 'block';
+            })
+        }
+
+        feturedUploadElement.addEventListener('change', uploadFeaturedImage);
+    </script>
+}

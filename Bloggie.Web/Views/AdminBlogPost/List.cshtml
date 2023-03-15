@@ -1,0 +1,66 @@
+﻿@model List<Bloggie.Web.Models.Domain.BlogPost>
+
+@{
+}
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>Show All BlogPosts - Admin Functionality</h1>
+    </div>
+</div>
+
+<div class="container" py-5>
+    @if (Model != null && Model.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Heading</th>
+                    <th>PageTitle</th>
+                    <th>Content</th>
+                    <th>ShortDescription</th>
+                    <th>FeaturedImageUrl</th>
+                    <th>UrlHandle</th>
+                    <th>PublishedDate</th>
+                    <th>Author</th>
+                    <th>Visible</th>
+                    <th>Tags</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var blogPost in Model)
+                {
+                    <tr>
+                        <td>@blogPost.Id</td>
+                        <td>@blogPost.Heading</td>
+                        <td>@blogPost.PageTitle</td>
+                        <td>@blogPost.Content</td>
+                        <td>@blogPost.ShortDescription</td>
+                        <td>@blogPost.FeaturedImageUrl</td>
+                        <td>@blogPost.UrlHandle</td>
+                        <td>@blogPost.PublishedDate</td>
+                        <td>@blogPost.Author</td>
+                        <td>@blogPost.Visible</td>
+                        <td>
+                            <div class="d-flex">
+                                @foreach(var tag in blogPost.Tags)
+                                {
+                                    <span class="badge bg-secondary me-2">@tag.Name</span>
+                                }
+                            </div>
+                        </td>
+                        <td>
+                            <a asp-area="" asp-controller="AdminBlogPost" asp-action="Edit" asp-route-id="@blogPost.Id">Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No BlogPosts Found</p>
+    }
+</div>
